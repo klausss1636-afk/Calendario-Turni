@@ -95,6 +95,26 @@ h1{margin:5px 0 2px;text-align:center;font-size:28px;color:#0f172a}
   text-align:left;
   padding-left:2px;
 }
+.dayhead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:4px;
+}
+.dow{
+  font-size:9px;
+  font-weight:800;
+  color:#64748b;
+  letter-spacing:.1px;
+}
+.day.weekend .dow,
+.day.weekend .num{
+  color:#dc2626;
+}
+.day.weekend{
+  background:#fff7f7;
+  border-color:#fecaca;
+}
 .shift{
   margin-top:7px;
   font-size:19px;
@@ -208,9 +228,11 @@ h1{margin:5px 0 2px;text-align:center;font-size:28px;color:#0f172a}
 .save{background:#22c55e;color:#052e16}
 button,input{color-scheme:light}
 @media(max-width:520px){
-  .day{min-height:70px;padding:6px 4px 4px}
+  .day{min-height:74px;padding:6px 3px 4px}
   .shift{font-size:17px}
   .shiftname{font-size:9px}
+  .dow{font-size:7px}
+  .num{font-size:12px}
   .weekdays,.grid{gap:4px}
   .legend{grid-template-columns:repeat(5,1fr);gap:4px}
 }
@@ -359,7 +381,10 @@ function render(){
     cell.dataset.shift=sh;
     if(k===todayKey) cell.classList.add("today");
     if(manual[k]) cell.classList.add("manual");
-    cell.innerHTML=`<div class="num">${day}</div><div class="shift">${sh}</div><div class="shiftname">${names[sh]}</div>`;
+    const dow = d.toLocaleDateString("it-IT",{weekday:"long"});
+    const dayOfWeek = d.getDay();
+    if(dayOfWeek===0 || dayOfWeek===6) cell.classList.add("weekend");
+    cell.innerHTML=`<div class="dayhead"><div class="num">${day}</div><div class="dow">${dow}</div></div><div class="shift">${sh}</div><div class="shiftname">${names[sh]}</div>`;
     cell.addEventListener("click",()=>openModal(d,sh));
     cal.appendChild(cell);
   }
