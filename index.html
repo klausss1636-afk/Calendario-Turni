@@ -219,7 +219,7 @@ button,input{color-scheme:light}
 <body>
 <div class="wrap">
   <h1>📅 Calendario Turni</h1>
-  <div class="sub">Ciclo: 4 Mattine → 2 Notti → 2 Riposi → 4 Pomeriggi → 2 Notti → 2 Riposi</div>
+  <div class="sub">Ciclo fisso: 4 Mattine → 2 Notti → 2 Riposi → 4 Pomeriggi → 2 Notti → 2 Riposi → ripeti</div>
 
   <div class="card">
     <div class="topbar">
@@ -283,13 +283,14 @@ button,input{color-scheme:light}
 const baseCycle = ["M","M","M","M","N","N","R","R","P","P","P","P","N","N","R","R"];
 const names = {M:"Mattina",P:"Pomeriggio",N:"Notte",R:"Riposo",F:"Ferie"};
 const baseAnchor = new Date(2026,8,21); // 21 settembre 2026
-const cycleVersion = "v16-MNNR-PNNR";
+const cycleVersion = "v17-4M-2N-2R-4P-2N-2R";
 
 // Se arriva da una versione precedente del calendario,
 // azzera soltanto il vecchio punto di partenza automatico.
 if(localStorage.getItem("turni_cycle_version") !== cycleVersion){
   localStorage.removeItem("turni_anchor_date");
   localStorage.removeItem("turni_anchor_index");
+  localStorage.removeItem("turni_manual");
   localStorage.setItem("turni_cycle_version", cycleVersion);
 }
 
