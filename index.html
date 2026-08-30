@@ -271,6 +271,37 @@ button,input{color-scheme:light}
   .weekdays,.grid{gap:4px}
   .legend{grid-template-columns:repeat(5,1fr);gap:4px}
 }
+
+/* CORREZIONE FINALE MOBILE: etichette turno sempre dentro le caselle */
+.shiftname{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+  text-align:center !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:clip !important;
+  font-size:7px !important;
+  line-height:1 !important;
+  letter-spacing:-0.35px !important;
+  padding:0 !important;
+  margin:3px 0 0 0 !important;
+}
+
+@media(max-width:520px){
+  .day{
+    padding-left:0 !important;
+    padding-right:0 !important;
+  }
+  .shiftname{
+    font-size:5.2px !important;
+    letter-spacing:-0.45px !important;
+    transform:scaleX(.92);
+    transform-origin:center;
+  }
+}
+
 </style>
 </head>
 <body>
