@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f7fb">
+<meta name="color-scheme" content="light">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Calendario Turni</title>
+<link rel="icon" type="image/jpeg" href="Calendario-Turni-Icona.jpg">
+<link rel="apple-touch-icon" href="Calendario-Turni-Icona.jpg">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#eef3f9;
+  --card:#ffffff;
+  --card2:#f8fafc;
+  --text:#0f172a;
+  --muted:#475569;
+  --border:#cbd5e1;
+  --m:#eab308;
+  --p:#f97316;
+  --n:#3b82f6;
+  --r:#10b981;
+  --f:#a855f7;
+  --today:#2563eb;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:#eef3f9;color-scheme:light}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:linear-gradient(180deg,#f8fbff 0%,#e8eef7 100%);
+  color:var(--text);
+}
+.wrap{max-width:760px;margin:auto;padding:16px 12px 30px}
+h1{margin:5px 0 2px;text-align:center;font-size:28px;color:#0f172a}
+.sub{color:var(--muted);text-align:center;font-size:13px;margin-bottom:14px}
+.card{
+  background:#ffffff;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:14px;
+  box-shadow:0 10px 30px rgba(15,23,42,.10);
+}
+.topbar{
+  display:grid;
+  grid-template-columns:48px 1fr 48px;
+  gap:8px;
+  align-items:center;
+  margin-bottom:10px;
+}
+.navbtn,.action,.choice{
+  border:1px solid #cbd5e1;
+  background:#f8fafc;
+  color:#0f172a;
+  border-radius:14px;
+  font-weight:800;
+}
+.navbtn{height:44px;font-size:22px}
+.monthtitle{text-align:center;font-size:21px;font-weight:900;color:#0f172a}
+.weekdays,.grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+}
+.weekdays div{
+  text-align:center;
+  color:#475569;
+  font-size:12px;
+  font-weight:800;
+  padding:5px 0;
+}
+.day{
+  position:relative;
+  min-height:76px;
+  border:1px solid #cbd5e1;
+  background:#ffffff;
+  color:#0f172a;
+  border-radius:14px;
+  padding:7px 5px 5px;
+  text-align:center;
+  overflow:hidden;
+  appearance:none;
+  -webkit-appearance:none;
+}
+.day.empty{opacity:.35;background:#f8fafc}
+.num{
+  font-size:13px;
+  font-weight:900;
+  text-align:left;
+  padding-left:2px;
+}
+.shift{
+  margin-top:7px;
+  font-size:19px;
+  font-weight:1000;
+  line-height:1;
+}
+.shiftname{font-size:10px;font-weight:800;margin-top:4px;color:#334155}
+.day[data-shift="M"]{box-shadow:inset 0 -5px 0 var(--m)}
+.day[data-shift="P"]{box-shadow:inset 0 -5px 0 var(--p)}
+.day[data-shift="N"]{box-shadow:inset 0 -5px 0 var(--n)}
+.day[data-shift="R"]{box-shadow:inset 0 -5px 0 var(--r)}
+.day[data-shift="F"]{box-shadow:inset 0 -5px 0 var(--f)}
+.day.today{outline:3px solid var(--today);outline-offset:-2px;background:#eff6ff}
+.day.manual::after{
+  content:"•";
+  position:absolute;
+  top:2px;
+  right:6px;
+  font-size:18px;
+  color:#e11d48;
+}
+.legend{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:6px;
+  margin-top:12px;
+}
+.leg{
+  background:#f8fafc;
+  color:#0f172a;
+  border:1px solid #cbd5e1;
+  border-radius:12px;
+  padding:8px 4px;
+  text-align:center;
+  font-size:11px;
+  font-weight:800;
+}
+.leg b{display:block;font-size:16px;margin-bottom:2px}
+.info{
+  margin-top:12px;
+  color:#334155;
+  font-size:12px;
+  line-height:1.45;
+}
+.actions{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.action{padding:12px;font-size:14px}
+.primary{background:#2563eb;border-color:#2563eb;color:#ffffff}
+.danger{background:#fee2e2;border-color:#fecaca;color:#991b1b}
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,.42);
+  z-index:50;
+  padding:18px;
+  align-items:center;
+  justify-content:center;
+}
+.modal.show{display:flex}
+.sheet{
+  width:min(520px,100%);
+  background:#ffffff;
+  color:#0f172a;
+  border:1px solid #cbd5e1;
+  border-radius:22px;
+  padding:16px;
+  box-shadow:0 18px 60px rgba(15,23,42,.22);
+}
+.sheet h2{margin:0 0 4px;font-size:21px}
+.sheet .date{color:var(--muted);font-size:13px;margin-bottom:14px}
+.choices{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.choice{
+  padding:13px 8px;
+  font-size:14px;
+  background:#f8fafc;
+  color:#0f172a;
+  appearance:none;
+  -webkit-appearance:none;
+}
+.choice[data-v="M"]{border-color:var(--m)}
+.choice[data-v="P"]{border-color:var(--p)}
+.choice[data-v="N"]{border-color:var(--n)}
+.choice[data-v="R"]{border-color:var(--r)}
+.choice[data-v="F"]{border-color:var(--f)}
+.modebox{
+  margin-top:14px;
+  padding:12px;
+  background:#f8fafc;
+  color:#0f172a;
+  border-radius:14px;
+  border:1px solid #cbd5e1;
+}
+.modebox label{display:flex;gap:8px;align-items:flex-start;font-size:13px;margin:8px 0}
+.sheetfoot{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:14px;
+}
+.smallbtn{padding:12px;border:0;border-radius:13px;font-weight:900}
+.cancel{background:#e2e8f0;color:#0f172a}
+.save{background:#22c55e;color:#052e16}
+button,input{color-scheme:light}
+@media(max-width:520px){
+  .day{min-height:70px;padding:6px 4px 4px}
+  .shift{font-size:17px}
+  .shiftname{font-size:9px}
+  .weekdays,.grid{gap:4px}
+  .legend{grid-template-columns:repeat(5,1fr);gap:4px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📅 Calendario Turni</h1>
+  <div class="sub">Ciclo base: 4 Mattine → 4 Pomeriggi → 2 Notti → 2 Riposi</div>
+
+  <div class="card">
+    <div class="topbar">
+      <button class="navbtn" id="prev">‹</button>
+      <div class="monthtitle" id="monthTitle"></div>
+      <button class="navbtn" id="next">›</button>
+    </div>
+
+    <div class="weekdays">
+      <div>Lun</div><div>Mar</div><div>Mer</div><div>Gio</div><div>Ven</div><div>Sab</div><div>Dom</div>
+    </div>
+    <div class="grid" id="calendar"></div>
+
+    <div class="legend">
+      <div class="leg"><b>M</b>Mattina</div>
+      <div class="leg"><b>P</b>Pomeriggio</div>
+      <div class="leg"><b>N</b>Notte</div>
+      <div class="leg"><b>R</b>Riposo</div>
+      <div class="leg"><b>F</b>Ferie</div>
+    </div>
+
+    <div class="info">
+      Riferimento iniziale: <b>21 settembre 2026 = 1ª Mattina</b>.<br>
+      Tocca un giorno per modificarlo. Puoi cambiare solo quel giorno oppure far ripartire da lì il ciclo automatico.
+      Le modifiche vengono salvate sul telefono.
+    </div>
+
+    <div class="actions">
+      <button class="action primary" id="todayBtn">Vai a oggi</button>
+      <button class="action danger" id="resetBtn">Azzera modifiche</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="sheet">
+    <h2>Modifica turno</h2>
+    <div class="date" id="modalDate"></div>
+
+    <div class="choices">
+      <button class="choice" data-v="M">M · Mattina</button>
+      <button class="choice" data-v="P">P · Pomeriggio</button>
+      <button class="choice" data-v="N">N · Notte</button>
+      <button class="choice" data-v="R">R · Riposo</button>
+      <button class="choice" data-v="F">F · Ferie</button>
+    </div>
+
+    <div class="modebox">
+      <label><input type="radio" name="editMode" value="single" checked> <span><b>Modifica solo questo giorno</b><br>Gli altri giorni restano sul ciclo normale.</span></label>
+      <label><input type="radio" name="editMode" value="restart"> <span><b>Riparti da questo turno</b><br>Da questo giorno in poi il calendario viene ricalcolato.</span></label>
+    </div>
+
+    <div class="sheetfoot">
+      <button class="smallbtn cancel" id="cancel">Annulla</button>
+      <button class="smallbtn save" id="save">Salva</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const baseCycle = ["M","M","M","M","P","P","P","P","N","N","R","R"];
+const names = {M:"Mattina",P:"Pomeriggio",N:"Notte",R:"Riposo",F:"Ferie"};
+const baseAnchor = new Date(2026,8,21); // 21 settembre 2026
+let anchorDate = new Date(localStorage.getItem("turni_anchor_date") || baseAnchor.toISOString());
+let anchorIndex = Number(localStorage.getItem("turni_anchor_index") || 0);
+let manual = JSON.parse(localStorage.getItem("turni_manual") || "{}");
+
+const now = new Date();
+let shownYear = now.getFullYear();
+let shownMonth = now.getMonth();
+let selectedDate = null;
+let selectedShift = null;
+
+function dateKey(d){
+  const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,"0"), day=String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+function localMidnight(d){ return new Date(d.getFullYear(),d.getMonth(),d.getDate()); }
+function dayDiff(a,b){
+  return Math.round((localMidnight(a)-localMidnight(b))/86400000);
+}
+function autoShiftForDate(d){
+  const diff = dayDiff(d, anchorDate);
+  const idx = ((anchorIndex + diff) % baseCycle.length + baseCycle.length) % baseCycle.length;
+  return baseCycle[idx];
+}
+function getShift(d){
+  const k=dateKey(d);
+  return manual[k] || autoShiftForDate(d);
+}
+function monthName(m){
+  return ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"][m];
+}
+function render(){
+  document.getElementById("monthTitle").textContent = `${monthName(shownMonth)} ${shownYear}`;
+  const cal=document.getElementById("calendar");
+  cal.innerHTML="";
+  const first=new Date(shownYear,shownMonth,1);
+  const daysInMonth=new Date(shownYear,shownMonth+1,0).getDate();
+  const start=(first.getDay()+6)%7;
+
+  for(let i=0;i<start;i++){
+    const e=document.createElement("div");
+    e.className="day empty";
+    cal.appendChild(e);
+  }
+
+  const todayKey=dateKey(new Date());
+  for(let day=1;day<=daysInMonth;day++){
+    const d=new Date(shownYear,shownMonth,day);
+    const k=dateKey(d);
+    const sh=getShift(d);
+    const cell=document.createElement("button");
+    cell.className="day";
+    cell.dataset.shift=sh;
+    if(k===todayKey) cell.classList.add("today");
+    if(manual[k]) cell.classList.add("manual");
+    cell.innerHTML=`<div class="num">${day}</div><div class="shift">${sh}</div><div class="shiftname">${names[sh]}</div>`;
+    cell.addEventListener("click",()=>openModal(d,sh));
+    cal.appendChild(cell);
+  }
+}
+function paintChoices(){
+  document.querySelectorAll(".choice").forEach(b=>{
+    const active=b.dataset.v===selectedShift;
+    b.style.background=active ? "#2563eb" : "#f8fafc";
+    b.style.color=active ? "#ffffff" : "#0f172a";
+  });
+}
+function openModal(d,sh){
+  selectedDate=new Date(d);
+  selectedShift=sh;
+  document.getElementById("modalDate").textContent =
+    d.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  paintChoices();
+  document.querySelector('input[name="editMode"][value="single"]').checked=true;
+  document.getElementById("modal").classList.add("show");
+}
+document.querySelectorAll(".choice").forEach(b=>{
+  b.addEventListener("click",()=>{
+    selectedShift=b.dataset.v;
+    paintChoices();
+  });
+});
+document.getElementById("cancel").addEventListener("click",()=>document.getElementById("modal").classList.remove("show"));
+document.getElementById("modal").addEventListener("click",(e)=>{
+  if(e.target.id==="modal") document.getElementById("modal").classList.remove("show");
+});
+document.getElementById("save").addEventListener("click",()=>{
+  if(!selectedDate || !selectedShift) return;
+  const mode=document.querySelector('input[name="editMode"]:checked').value;
+  const k=dateKey(selectedDate);
+
+  if(mode==="single"){
+    manual[k]=selectedShift;
+    localStorage.setItem("turni_manual",JSON.stringify(manual));
+  }else{
+    const firstIndex = {M:0,P:4,N:8,R:10,F:0}[selectedShift];
+    anchorDate = new Date(selectedDate);
+    anchorIndex = firstIndex;
+    localStorage.setItem("turni_anchor_date",anchorDate.toISOString());
+    localStorage.setItem("turni_anchor_index",String(anchorIndex));
+    Object.keys(manual).forEach(key=>{
+      if(key>=k) delete manual[key];
+    });
+    if(selectedShift==="F"){
+      manual[k]="F";
+    }
+    localStorage.setItem("turni_manual",JSON.stringify(manual));
+  }
+
+  document.getElementById("modal").classList.remove("show");
+  render();
+});
+document.getElementById("prev").addEventListener("click",()=>{
+  shownMonth--;
+  if(shownMonth<0){shownMonth=11;shownYear--}
+  render();
+});
+document.getElementById("next").addEventListener("click",()=>{
+  shownMonth++;
+  if(shownMonth>11){shownMonth=0;shownYear++}
+  render();
+});
+document.getElementById("todayBtn").addEventListener("click",()=>{
+  const d=new Date();
+  shownYear=d.getFullYear(); shownMonth=d.getMonth(); render();
+});
+document.getElementById("resetBtn").addEventListener("click",()=>{
+  if(confirm("Vuoi cancellare tutte le modifiche e tornare al ciclo base dal 21 settembre 2026?")){
+    manual={};
+    anchorDate=new Date(baseAnchor);
+    anchorIndex=0;
+    localStorage.removeItem("turni_manual");
+    localStorage.removeItem("turni_anchor_date");
+    localStorage.removeItem("turni_anchor_index");
+    render();
+  }
+});
+
+render();
+</script>
+</body>
+</html>
