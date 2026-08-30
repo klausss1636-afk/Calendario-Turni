@@ -92,20 +92,30 @@ h1{margin:5px 0 2px;text-align:center;font-size:28px;color:#0f172a}
 .num{
   font-size:13px;
   font-weight:900;
-  text-align:left;
-  padding-left:2px;
+  text-align:center;
+  padding:0;
+  line-height:1.05;
 }
 .dayhead{
   display:flex;
+  flex-direction:column;
   align-items:center;
-  justify-content:space-between;
-  gap:4px;
+  justify-content:center;
+  gap:2px;
+  width:100%;
+  min-width:0;
 }
 .dow{
-  font-size:9px;
+  width:100%;
+  font-size:8px;
   font-weight:800;
   color:#64748b;
-  letter-spacing:.1px;
+  letter-spacing:0;
+  text-align:center;
+  line-height:1.05;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:clip;
 }
 .day.weekend .dow,
 .day.weekend .num{
@@ -115,8 +125,18 @@ h1{margin:5px 0 2px;text-align:center;font-size:28px;color:#0f172a}
   background:#fff7f7;
   border-color:#fecaca;
 }
+
+.day.holiday .dow,
+.day.holiday .num{
+  color:#dc2626;
+}
+.day.holiday{
+  background:#fff7f7;
+  border-color:#fecaca;
+}
+
 .shift{
-  margin-top:7px;
+  margin-top:6px;
   font-size:19px;
   font-weight:1000;
   line-height:1;
@@ -228,10 +248,10 @@ h1{margin:5px 0 2px;text-align:center;font-size:28px;color:#0f172a}
 .save{background:#22c55e;color:#052e16}
 button,input{color-scheme:light}
 @media(max-width:520px){
-  .day{min-height:74px;padding:6px 3px 4px}
-  .shift{font-size:17px}
-  .shiftname{font-size:9px}
-  .dow{font-size:7px}
+  .day{min-height:82px;padding:6px 2px 4px}
+  .shift{font-size:17px;margin-top:5px}
+  .shiftname{font-size:8px}
+  .dow{font-size:6.8px}
   .num{font-size:12px}
   .weekdays,.grid{gap:4px}
   .legend{grid-template-columns:repeat(5,1fr);gap:4px}
@@ -354,6 +374,53 @@ function getShift(d){
   const k=dateKey(d);
   return manual[k] || autoShiftForDate(d);
 }
+
+function easterDate(year){
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31) - 1;
+  const day = ((h + l - 7 * m + 114) % 31) + 1;
+  return new Date(year, month, day);
+}
+
+function holidayName(d){
+  const y = d.getFullYear();
+  const key = `${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+
+  const fixed = {
+    "01-01":"Capodanno",
+    "01-06":"Epifania",
+    "04-25":"Festa della Liberazione",
+    "05-01":"Festa dei Lavoratori",
+    "06-02":"Festa della Repubblica",
+    "08-15":"Ferragosto",
+    "11-01":"Ognissanti",
+    "12-08":"Immacolata Concezione",
+    "12-25":"Natale",
+    "12-26":"Santo Stefano"
+  };
+  if(fixed[key]) return fixed[key];
+
+  const easter = easterDate(y);
+  if(dateKey(d) === dateKey(easter)) return "Pasqua";
+
+  const monday = new Date(easter);
+  monday.setDate(monday.getDate()+1);
+  if(dateKey(d) === dateKey(monday)) return "Pasquetta";
+
+  return "";
+}
+
 function monthName(m){
   return ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"][m];
 }
@@ -383,7 +450,9 @@ function render(){
     if(manual[k]) cell.classList.add("manual");
     const dow = d.toLocaleDateString("it-IT",{weekday:"long"});
     const dayOfWeek = d.getDay();
+    const fest = holidayName(d);
     if(dayOfWeek===0 || dayOfWeek===6) cell.classList.add("weekend");
+    if(fest) cell.classList.add("holiday");
     cell.innerHTML=`<div class="dayhead"><div class="num">${day}</div><div class="dow">${dow}</div></div><div class="shift">${sh}</div><div class="shiftname">${names[sh]}</div>`;
     cell.addEventListener("click",()=>openModal(d,sh));
     cal.appendChild(cell);
