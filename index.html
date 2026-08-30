@@ -101,21 +101,23 @@ h1{margin:5px 0 2px;text-align:center;font-size:28px;color:#0f172a}
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:2px;
   width:100%;
+  max-width:100%;
   min-width:0;
+  overflow:hidden;
+  gap:1px;
 }
 .dow{
+  display:block;
   width:100%;
+  max-width:100%;
   font-size:8px;
   font-weight:800;
   color:#64748b;
-  letter-spacing:0;
   text-align:center;
-  line-height:1.05;
+  line-height:1;
   white-space:nowrap;
   overflow:hidden;
-  text-overflow:clip;
 }
 .day.weekend .dow,
 .day.weekend .num{
@@ -248,11 +250,12 @@ h1{margin:5px 0 2px;text-align:center;font-size:28px;color:#0f172a}
 .save{background:#22c55e;color:#052e16}
 button,input{color-scheme:light}
 @media(max-width:520px){
-  .day{min-height:82px;padding:6px 2px 4px}
+  .day{min-height:82px;padding:6px 2px 4px;overflow:hidden}
+  .dayhead{width:100%;max-width:100%;overflow:hidden}
+  .num{font-size:12px;text-align:center;width:100%}
+  .dow{font-size:7px;text-align:center;width:100%;max-width:100%}
   .shift{font-size:17px;margin-top:5px}
-  .shiftname{font-size:8px}
-  .dow{font-size:6.8px}
-  .num{font-size:12px}
+  .shiftname{font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:clip;width:100%}
   .weekdays,.grid{gap:4px}
   .legend{grid-template-columns:repeat(5,1fr);gap:4px}
 }
@@ -448,7 +451,7 @@ function render(){
     cell.dataset.shift=sh;
     if(k===todayKey) cell.classList.add("today");
     if(manual[k]) cell.classList.add("manual");
-    const dow = d.toLocaleDateString("it-IT",{weekday:"long"});
+    const dow = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"][d.getDay()];
     const dayOfWeek = d.getDay();
     const fest = holidayName(d);
     if(dayOfWeek===0 || dayOfWeek===6) cell.classList.add("weekend");
