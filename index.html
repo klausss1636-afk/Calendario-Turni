@@ -243,6 +243,7 @@ button,input{color-scheme:light}
 
     <div class="info">
       Riferimento iniziale: <b>21 settembre 2026 = 1ª Mattina</b>.<br>
+      Correzione settembre: <b>25–26 Notte, 27–28 Riposo</b>.<br>
       Tocca un giorno per modificarlo. Puoi cambiare solo quel giorno oppure far ripartire da lì il ciclo automatico.
       Le modifiche vengono salvate sul telefono.
     </div>
@@ -283,9 +284,26 @@ button,input{color-scheme:light}
 const baseCycle = ["M","M","M","M","P","P","P","P","N","N","R","R"];
 const names = {M:"Mattina",P:"Pomeriggio",N:"Notte",R:"Riposo",F:"Ferie"};
 const baseAnchor = new Date(2026,8,21); // 21 settembre 2026
+
+// Correzioni reali già note per settembre 2026.
+// Le modifiche salvate dall'utente hanno comunque la precedenza.
+const baseManual = {
+  "2026-09-25":"N",
+  "2026-09-26":"N",
+  "2026-09-27":"R",
+  "2026-09-28":"R"
+};
+
 let anchorDate = new Date(localStorage.getItem("turni_anchor_date") || baseAnchor.toISOString());
 let anchorIndex = Number(localStorage.getItem("turni_anchor_index") || 0);
-let manual = JSON.parse(localStorage.getItem("turni_manual") || "{}");
+
+let savedManual = {};
+try{
+  savedManual = JSON.parse(localStorage.getItem("turni_manual") || "{}");
+}catch(e){
+  savedManual = {};
+}
+let manual = {...baseManual, ...savedManual};
 
 const now = new Date();
 let shownYear = now.getFullYear();
@@ -409,11 +427,11 @@ document.getElementById("todayBtn").addEventListener("click",()=>{
   shownYear=d.getFullYear(); shownMonth=d.getMonth(); render();
 });
 document.getElementById("resetBtn").addEventListener("click",()=>{
-  if(confirm("Vuoi cancellare tutte le modifiche e tornare al ciclo base dal 21 settembre 2026?")){
-    manual={};
+  if(confirm("Vuoi cancellare tutte le modifiche e tornare al calendario corretto dal 21 settembre 2026?")){
+    manual={...baseManual};
     anchorDate=new Date(baseAnchor);
     anchorIndex=0;
-    localStorage.removeItem("turni_manual");
+    localStorage.setItem("turni_manual",JSON.stringify(manual));
     localStorage.removeItem("turni_anchor_date");
     localStorage.removeItem("turni_anchor_index");
     render();
