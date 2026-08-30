@@ -219,7 +219,7 @@ button,input{color-scheme:light}
 <body>
 <div class="wrap">
   <h1>📅 Calendario Turni</h1>
-  <div class="sub">Ciclo base: 4 Mattine → 4 Pomeriggi → 2 Notti → 2 Riposi</div>
+  <div class="sub">Ciclo base: 4 Mattine → 2 Notti → 2 Riposi → 4 Pomeriggi → 2 Notti → 2 Riposi</div>
 
   <div class="card">
     <div class="topbar">
@@ -243,7 +243,6 @@ button,input{color-scheme:light}
 
     <div class="info">
       Riferimento iniziale: <b>21 settembre 2026 = 1ª Mattina</b>.<br>
-      Correzione settembre: <b>25–26 Notte, 27–28 Riposo</b>.<br>
       Tocca un giorno per modificarlo. Puoi cambiare solo quel giorno oppure far ripartire da lì il ciclo automatico.
       Le modifiche vengono salvate sul telefono.
     </div>
@@ -281,18 +280,13 @@ button,input{color-scheme:light}
 </div>
 
 <script>
-const baseCycle = ["M","M","M","M","P","P","P","P","N","N","R","R"];
+const baseCycle = ["M","M","M","M","N","N","R","R","P","P","P","P","N","N","R","R"];
 const names = {M:"Mattina",P:"Pomeriggio",N:"Notte",R:"Riposo",F:"Ferie"};
 const baseAnchor = new Date(2026,8,21); // 21 settembre 2026
 
 // Correzioni reali già note per settembre 2026.
 // Le modifiche salvate dall'utente hanno comunque la precedenza.
-const baseManual = {
-  "2026-09-25":"N",
-  "2026-09-26":"N",
-  "2026-09-27":"R",
-  "2026-09-28":"R"
-};
+const baseManual = {};
 
 let anchorDate = new Date(localStorage.getItem("turni_anchor_date") || baseAnchor.toISOString());
 let anchorIndex = Number(localStorage.getItem("turni_anchor_index") || 0);
@@ -395,7 +389,7 @@ document.getElementById("save").addEventListener("click",()=>{
     manual[k]=selectedShift;
     localStorage.setItem("turni_manual",JSON.stringify(manual));
   }else{
-    const firstIndex = {M:0,P:4,N:8,R:10,F:0}[selectedShift];
+    const firstIndex = {M:0,P:8,N:4,R:6,F:0}[selectedShift];
     anchorDate = new Date(selectedDate);
     anchorIndex = firstIndex;
     localStorage.setItem("turni_anchor_date",anchorDate.toISOString());
