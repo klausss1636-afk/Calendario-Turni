@@ -5,13 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f4f7fb">
 <meta name="color-scheme" content="light">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-<link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Calendario Turni</title>
-<link rel="icon" type="image/jpeg" href="Calendario-Turni-Icona.jpg">
-<link rel="apple-touch-icon" href="Calendario-Turni-Icona.jpg">
 <style>
 :root{
   color-scheme:light;
@@ -92,70 +86,16 @@ h1{margin:5px 0 2px;text-align:center;font-size:28px;color:#0f172a}
 .num{
   font-size:13px;
   font-weight:900;
-  text-align:center;
-  padding:0;
-  line-height:1.05;
+  text-align:left;
+  padding-left:2px;
 }
-.dayhead{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  max-width:100%;
-  min-width:0;
-  overflow:hidden;
-  gap:1px;
-}
-.dow{
-  display:block;
-  width:100%;
-  max-width:100%;
-  font-size:8px;
-  font-weight:800;
-  color:#64748b;
-  text-align:center;
-  line-height:1;
-  white-space:nowrap;
-  overflow:hidden;
-}
-.day.weekend .dow,
-.day.weekend .num{
-  color:#dc2626;
-}
-.day.weekend{
-  background:#fff7f7;
-  border-color:#fecaca;
-}
-
-.day.holiday .dow,
-.day.holiday .num{
-  color:#dc2626;
-}
-.day.holiday{
-  background:#fff7f7;
-  border-color:#fecaca;
-}
-
 .shift{
-  margin-top:6px;
+  margin-top:7px;
   font-size:19px;
   font-weight:1000;
   line-height:1;
 }
-.shiftname{
-  font-size:7px;
-  font-weight:800;
-  margin-top:3px;
-  color:#334155;
-  line-height:1;
-  white-space:nowrap;
-  overflow:hidden;
-  width:100%;
-  max-width:100%;
-  text-align:center;
-  letter-spacing:-0.25px;
-}
+.shiftname{font-size:10px;font-weight:800;margin-top:4px;color:#334155}
 .day[data-shift="M"]{box-shadow:inset 0 -5px 0 var(--m)}
 .day[data-shift="P"]{box-shadow:inset 0 -5px 0 var(--p)}
 .day[data-shift="N"]{box-shadow:inset 0 -5px 0 var(--n)}
@@ -199,6 +139,10 @@ h1{margin:5px 0 2px;text-align:center;font-size:28px;color:#0f172a}
   grid-template-columns:1fr 1fr;
   gap:8px;
 }
+.durationbox{display:none;margin-top:12px}
+.durationbox.show{display:block}
+.durationbox label{display:block;font-size:13px;font-weight:800;margin-bottom:6px}
+.durationbox input{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:12px;background:#fff;color:#0f172a;font-size:16px;font-weight:800}
 .action{padding:12px;font-size:14px}
 .primary{background:#2563eb;border-color:#2563eb;color:#ffffff}
 .danger{background:#fee2e2;border-color:#fecaca;color:#991b1b}
@@ -262,52 +206,18 @@ h1{margin:5px 0 2px;text-align:center;font-size:28px;color:#0f172a}
 .save{background:#22c55e;color:#052e16}
 button,input{color-scheme:light}
 @media(max-width:520px){
-  .day{min-height:82px;padding:6px 1px 4px;overflow:hidden}
-  .dayhead{width:100%;max-width:100%;overflow:hidden}
-  .num{font-size:12px;text-align:center;width:100%}
-  .dow{font-size:7px;text-align:center;width:100%;max-width:100%}
-  .shift{font-size:17px;margin-top:5px}
-  .shiftname{font-size:5.8px;white-space:nowrap;overflow:hidden;width:100%;max-width:100%;text-align:center;letter-spacing:-0.3px;margin-top:3px}
+  .day{min-height:70px;padding:6px 4px 4px}
+  .shift{font-size:17px}
+  .shiftname{font-size:9px}
   .weekdays,.grid{gap:4px}
   .legend{grid-template-columns:repeat(5,1fr);gap:4px}
 }
-
-/* CORREZIONE FINALE MOBILE: etichette turno sempre dentro le caselle */
-.shiftname{
-  display:block !important;
-  width:100% !important;
-  max-width:100% !important;
-  box-sizing:border-box !important;
-  text-align:center !important;
-  white-space:nowrap !important;
-  overflow:hidden !important;
-  text-overflow:clip !important;
-  font-size:7px !important;
-  line-height:1 !important;
-  letter-spacing:-0.35px !important;
-  padding:0 !important;
-  margin:3px 0 0 0 !important;
-}
-
-@media(max-width:520px){
-  .day{
-    padding-left:0 !important;
-    padding-right:0 !important;
-  }
-  .shiftname{
-    font-size:5.2px !important;
-    letter-spacing:-0.45px !important;
-    transform:scaleX(.92);
-    transform-origin:center;
-  }
-}
-
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>📅 Calendario Turni</h1>
-  <div class="sub">Ciclo fisso: 4 Mattine → 2 Notti → 2 Riposi → 4 Pomeriggi → 2 Notti → 2 Riposi → ripeti</div>
+  <div class="sub">Ciclo base: 4 Mattine → 4 Pomeriggi → 2 Notti → 2 Riposi</div>
 
   <div class="card">
     <div class="topbar">
@@ -330,14 +240,15 @@ button,input{color-scheme:light}
     </div>
 
     <div class="info">
-      Riferimento iniziale: <b>21 settembre 2026 = 1ª Mattina</b>.<br><b>21–24 M · 25–26 N · 27–28 R · 29 settembre–2 ottobre P · 3–4 N · 5–6 R</b>.<br>
+      Riferimento iniziale: <b>21 settembre 2026 = 1ª Mattina</b>.<br>
       Tocca un giorno per modificarlo. Puoi cambiare solo quel giorno oppure far ripartire da lì il ciclo automatico.
       Le modifiche vengono salvate sul telefono.
     </div>
 
     <div class="actions">
       <button class="action primary" id="todayBtn">Vai a oggi</button>
-      <button class="action danger" id="resetBtn">Azzera modifiche</button>
+      <button class="action" id="undoBtn">↶ Annulla modifica</button>
+      <button class="action danger" id="resetBtn">Ripristina turni originali</button>
     </div>
   </div>
 </div>
@@ -360,6 +271,11 @@ button,input{color-scheme:light}
       <label><input type="radio" name="editMode" value="restart"> <span><b>Riparti da questo turno</b><br>Da questo giorno in poi il calendario viene ricalcolato.</span></label>
     </div>
 
+    <div class="durationbox" id="durationBox">
+      <label for="duration">Per quanti giorni consecutivi?</label>
+      <input id="duration" type="number" min="1" max="31" value="1" inputmode="numeric">
+    </div>
+
     <div class="sheetfoot">
       <button class="smallbtn cancel" id="cancel">Annulla</button>
       <button class="smallbtn save" id="save">Salva</button>
@@ -368,34 +284,19 @@ button,input{color-scheme:light}
 </div>
 
 <script>
-const baseCycle = ["M","M","M","M","N","N","R","R","P","P","P","P","N","N","R","R"];
+const baseCycle = ["M","M","M","M","P","P","P","P","N","N","R","R"];
 const names = {M:"Mattina",P:"Pomeriggio",N:"Notte",R:"Riposo",F:"Ferie"};
 const baseAnchor = new Date(2026,8,21); // 21 settembre 2026
-const cycleVersion = "v17-4M-2N-2R-4P-2N-2R";
+let manual = JSON.parse(localStorage.getItem("turni_manual") || "{}");
+let segments = JSON.parse(localStorage.getItem("turni_segments") || "[]");
+let history = JSON.parse(localStorage.getItem("turni_history") || "[]");
 
-// Se arriva da una versione precedente del calendario,
-// azzera soltanto il vecchio punto di partenza automatico.
-if(localStorage.getItem("turni_cycle_version") !== cycleVersion){
-  localStorage.removeItem("turni_anchor_date");
-  localStorage.removeItem("turni_anchor_index");
-  localStorage.removeItem("turni_manual");
-  localStorage.setItem("turni_cycle_version", cycleVersion);
+// Recupera automaticamente eventuali ricalcoli salvati dalla versione precedente.
+if(!segments.length && localStorage.getItem("turni_anchor_date")){
+  const oldDate=new Date(localStorage.getItem("turni_anchor_date"));
+  segments=[{date:dateKey(oldDate),index:Number(localStorage.getItem("turni_anchor_index") || 0)}];
+  localStorage.setItem("turni_segments",JSON.stringify(segments));
 }
-
-// Correzioni reali già note per settembre 2026.
-// Le modifiche salvate dall'utente hanno comunque la precedenza.
-const baseManual = {};
-
-let anchorDate = new Date(localStorage.getItem("turni_anchor_date") || baseAnchor.toISOString());
-let anchorIndex = Number(localStorage.getItem("turni_anchor_index") || 0);
-
-let savedManual = {};
-try{
-  savedManual = JSON.parse(localStorage.getItem("turni_manual") || "{}");
-}catch(e){
-  savedManual = {};
-}
-let manual = {...baseManual, ...savedManual};
 
 const now = new Date();
 let shownYear = now.getFullYear();
@@ -412,61 +313,38 @@ function dayDiff(a,b){
   return Math.round((localMidnight(a)-localMidnight(b))/86400000);
 }
 function autoShiftForDate(d){
-  const diff = dayDiff(d, anchorDate);
-  const idx = ((anchorIndex + diff) % baseCycle.length + baseCycle.length) % baseCycle.length;
+  const k=dateKey(d);
+  let anchor=baseAnchor, index=0;
+  const valid=segments.filter(s=>s.date<=k).sort((a,b)=>a.date.localeCompare(b.date));
+  if(valid.length){
+    const last=valid[valid.length-1];
+    anchor=new Date(last.date+"T00:00:00");
+    index=Number(last.index);
+  }
+  const diff = dayDiff(d, anchor);
+  const idx = ((index + diff) % baseCycle.length + baseCycle.length) % baseCycle.length;
   return baseCycle[idx];
+}
+function snapshot(){
+  history.push({manual:JSON.parse(JSON.stringify(manual)),segments:JSON.parse(JSON.stringify(segments))});
+  if(history.length>30) history.shift();
+  localStorage.setItem("turni_history",JSON.stringify(history));
+}
+function persist(){
+  localStorage.setItem("turni_manual",JSON.stringify(manual));
+  localStorage.setItem("turni_segments",JSON.stringify(segments));
+  localStorage.removeItem("turni_anchor_date");
+  localStorage.removeItem("turni_anchor_index");
+}
+function updateUndoButton(){
+  const b=document.getElementById("undoBtn");
+  b.disabled=!history.length;
+  b.style.opacity=history.length?"1":".45";
 }
 function getShift(d){
   const k=dateKey(d);
   return manual[k] || autoShiftForDate(d);
 }
-
-function easterDate(year){
-  const a = year % 19;
-  const b = Math.floor(year / 100);
-  const c = year % 100;
-  const d = Math.floor(b / 4);
-  const e = b % 4;
-  const f = Math.floor((b + 8) / 25);
-  const g = Math.floor((b - f + 1) / 3);
-  const h = (19 * a + b - d - g + 15) % 30;
-  const i = Math.floor(c / 4);
-  const k = c % 4;
-  const l = (32 + 2 * e + 2 * i - h - k) % 7;
-  const m = Math.floor((a + 11 * h + 22 * l) / 451);
-  const month = Math.floor((h + l - 7 * m + 114) / 31) - 1;
-  const day = ((h + l - 7 * m + 114) % 31) + 1;
-  return new Date(year, month, day);
-}
-
-function holidayName(d){
-  const y = d.getFullYear();
-  const key = `${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-
-  const fixed = {
-    "01-01":"Capodanno",
-    "01-06":"Epifania",
-    "04-25":"Festa della Liberazione",
-    "05-01":"Festa dei Lavoratori",
-    "06-02":"Festa della Repubblica",
-    "08-15":"Ferragosto",
-    "11-01":"Ognissanti",
-    "12-08":"Immacolata Concezione",
-    "12-25":"Natale",
-    "12-26":"Santo Stefano"
-  };
-  if(fixed[key]) return fixed[key];
-
-  const easter = easterDate(y);
-  if(dateKey(d) === dateKey(easter)) return "Pasqua";
-
-  const monday = new Date(easter);
-  monday.setDate(monday.getDate()+1);
-  if(dateKey(d) === dateKey(monday)) return "Pasquetta";
-
-  return "";
-}
-
 function monthName(m){
   return ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"][m];
 }
@@ -494,15 +372,11 @@ function render(){
     cell.dataset.shift=sh;
     if(k===todayKey) cell.classList.add("today");
     if(manual[k]) cell.classList.add("manual");
-    const dow = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"][d.getDay()];
-    const dayOfWeek = d.getDay();
-    const fest = holidayName(d);
-    if(dayOfWeek===0 || dayOfWeek===6) cell.classList.add("weekend");
-    if(fest) cell.classList.add("holiday");
-    cell.innerHTML=`<div class="dayhead"><div class="num">${day}</div><div class="dow">${dow}</div></div><div class="shift">${sh}</div><div class="shiftname">${names[sh]}</div>`;
+    cell.innerHTML=`<div class="num">${day}</div><div class="shift">${sh}</div><div class="shiftname">${names[sh]}</div>`;
     cell.addEventListener("click",()=>openModal(d,sh));
     cal.appendChild(cell);
   }
+  updateUndoButton();
 }
 function paintChoices(){
   document.querySelectorAll(".choice").forEach(b=>{
@@ -518,8 +392,13 @@ function openModal(d,sh){
     d.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
   paintChoices();
   document.querySelector('input[name="editMode"][value="single"]').checked=true;
+  document.getElementById("duration").value="1";
+  document.getElementById("durationBox").classList.remove("show");
   document.getElementById("modal").classList.add("show");
 }
+document.querySelectorAll('input[name="editMode"]').forEach(r=>r.addEventListener("change",()=>{
+  document.getElementById("durationBox").classList.toggle("show",r.value==="restart" && r.checked);
+}));
 document.querySelectorAll(".choice").forEach(b=>{
   b.addEventListener("click",()=>{
     selectedShift=b.dataset.v;
@@ -534,24 +413,26 @@ document.getElementById("save").addEventListener("click",()=>{
   if(!selectedDate || !selectedShift) return;
   const mode=document.querySelector('input[name="editMode"]:checked').value;
   const k=dateKey(selectedDate);
+  snapshot();
 
   if(mode==="single"){
     manual[k]=selectedShift;
-    localStorage.setItem("turni_manual",JSON.stringify(manual));
   }else{
-    const firstIndex = {M:0,P:8,N:4,R:6,F:0}[selectedShift];
-    anchorDate = new Date(selectedDate);
-    anchorIndex = firstIndex;
-    localStorage.setItem("turni_anchor_date",anchorDate.toISOString());
-    localStorage.setItem("turni_anchor_index",String(anchorIndex));
+    const duration=Math.max(1,Math.min(31,Number(document.getElementById("duration").value)||1));
     Object.keys(manual).forEach(key=>{
       if(key>=k) delete manual[key];
     });
-    if(selectedShift==="F"){
-      manual[k]="F";
+    segments=segments.filter(s=>s.date<k);
+    for(let i=0;i<duration;i++){
+      const d=new Date(selectedDate); d.setDate(d.getDate()+i);
+      manual[dateKey(d)]=selectedShift;
     }
-    localStorage.setItem("turni_manual",JSON.stringify(manual));
+    const nextDate=new Date(selectedDate); nextDate.setDate(nextDate.getDate()+duration);
+    const nextIndex={M:4,P:8,N:10,R:0,F:0}[selectedShift];
+    segments.push({date:dateKey(nextDate),index:nextIndex});
   }
+
+  persist();
 
   document.getElementById("modal").classList.remove("show");
   render();
@@ -570,15 +451,21 @@ document.getElementById("todayBtn").addEventListener("click",()=>{
   const d=new Date();
   shownYear=d.getFullYear(); shownMonth=d.getMonth(); render();
 });
+document.getElementById("undoBtn").addEventListener("click",()=>{
+  if(!history.length) return;
+  const previous=history.pop();
+  manual=previous.manual || {};
+  segments=previous.segments || [];
+  localStorage.setItem("turni_history",JSON.stringify(history));
+  persist();
+  render();
+});
 document.getElementById("resetBtn").addEventListener("click",()=>{
-  if(confirm("Vuoi cancellare tutte le modifiche e tornare al calendario corretto dal 21 settembre 2026?")){
-    manual={...baseManual};
-    anchorDate=new Date(baseAnchor);
-    anchorIndex=0;
-    localStorage.setItem("turni_manual",JSON.stringify(manual));
-    localStorage.removeItem("turni_anchor_date");
-    localStorage.removeItem("turni_anchor_index");
-    localStorage.setItem("turni_cycle_version", cycleVersion);
+  if(confirm("Vuoi cancellare tutte le modifiche e tornare al ciclo base dal 21 settembre 2026?")){
+    snapshot();
+    manual={};
+    segments=[];
+    persist();
     render();
   }
 });
