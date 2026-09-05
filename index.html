@@ -2,13 +2,13 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f4f7fb">
 <meta name="color-scheme" content="light">
 <link rel="icon" type="image/png" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<title>Calendario Turni</title>
+<title>Turni ❤️</title>
 <style>
 :root{
   color-scheme:light;
@@ -26,15 +26,36 @@
   --today:#2563eb;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{background:#eef3f9;color-scheme:light}
-body{
+html,body{
   margin:0;
+  width:100%;
+  min-width:100%;
+  min-height:100%;
+  background:#eef3f9;
+  color-scheme:light;
+  overflow-x:hidden;
+}
+body{
   min-height:100vh;
+  min-height:100dvh;
+  width:100vw;
+  display:block;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   background:linear-gradient(180deg,#f8fbff 0%,#e8eef7 100%);
   color:var(--text);
 }
-.wrap{max-width:760px;margin:auto;padding:16px 12px 30px}
+.wrap{
+  width:100%;
+  max-width:none;
+  min-height:100vh;
+  min-height:100dvh;
+  margin:0;
+  padding:
+    max(12px, env(safe-area-inset-top))
+    max(8px, env(safe-area-inset-right))
+    max(22px, env(safe-area-inset-bottom))
+    max(8px, env(safe-area-inset-left));
+}
 h1{margin:5px 0 2px;text-align:center;font-size:28px;color:#0f172a}
 .sub{color:var(--muted);text-align:center;font-size:13px;margin-bottom:14px}
 .card{
@@ -245,11 +266,20 @@ button,input{color-scheme:light}
   .shift{font-size:17px}
   .shiftname{font-size:6.5px;letter-spacing:-.4px}
 }
+
+@supports (height:100dvh){
+  body,.wrap{min-height:100dvh}
+}
+@media (min-width:521px){
+  .wrap{padding-left:14px;padding-right:14px}
+  .card{width:100%;max-width:900px;margin:0 auto}
+}
+
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>📅 Calendario Turni</h1>
+  <h1>📅 Turni ❤️</h1>
   <div class="sub">Ciclo: 4 Mattine → 2 Notti → 2 Riposi → 4 Pomeriggi → 2 Notti → 2 Riposi</div>
 
   <div class="card">
