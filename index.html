@@ -2,17 +2,16 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f4f7fb">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Turni ❤️">
-
+<meta name="theme-color" content="#f4f7fb">
 <meta name="color-scheme" content="light">
 <link rel="icon" type="image/png" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<title>Turni ❤️</title>
+<title>Calendario Turni</title>
 <style>
 :root{
   color-scheme:light;
@@ -30,36 +29,19 @@
   --today:#2563eb;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{
-  margin:0;
-  width:100%;
-  min-width:100%;
-  min-height:100%;
-  background:#eef3f9;
-  color-scheme:light;
-  overflow-x:hidden;
-}
+html,body{background:#eef3f9;color-scheme:light}
 body{
+  margin:0;
   min-height:100vh;
   min-height:100dvh;
-  width:100vw;
-  display:block;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   background:linear-gradient(180deg,#f8fbff 0%,#e8eef7 100%);
   color:var(--text);
 }
-.wrap{
-  width:100%;
-  max-width:none;
-  min-height:100vh;
-  min-height:100dvh;
-  margin:0;
-  padding:
-    max(12px, env(safe-area-inset-top))
-    max(8px, env(safe-area-inset-right))
-    max(22px, env(safe-area-inset-bottom))
-    max(8px, env(safe-area-inset-left));
-}
+.wrap{width:100%;max-width:760px;margin:auto;padding:16px 12px 30px}
 h1{margin:5px 0 2px;text-align:center;font-size:28px;color:#0f172a}
 .sub{color:var(--muted);text-align:center;font-size:13px;margin-bottom:14px}
 .card{
@@ -270,20 +252,121 @@ button,input{color-scheme:light}
   .shift{font-size:17px}
   .shiftname{font-size:6.5px;letter-spacing:-.4px}
 }
-
-@supports (height:100dvh){
-  body,.wrap{min-height:100dvh}
-}
-@media (min-width:521px){
-  .wrap{padding-left:14px;padding-right:14px}
-  .card{width:100%;max-width:900px;margin:0 auto}
-}
-
 </style>
+
+<style id="s24-fullscreen-fix">
+/* Samsung S24 / Android full-screen responsive layout */
+html{
+  width:100%;
+  min-height:100%;
+  background:#eef3f9;
+}
+body{
+  width:100%;
+  min-height:100vh;
+  min-height:100dvh;
+  margin:0;
+  display:block !important;
+  overflow-x:hidden;
+  background:linear-gradient(180deg,#f8fbff 0%,#e8eef7 100%);
+}
+.wrap{
+  width:100% !important;
+  max-width:none !important;
+  min-height:100vh;
+  min-height:100dvh;
+  margin:0 !important;
+  padding:10px 8px max(12px, env(safe-area-inset-bottom)) !important;
+  display:flex;
+  flex-direction:column;
+}
+.card{
+  width:100%;
+  flex:1 1 auto;
+  display:flex;
+  flex-direction:column;
+  min-height:calc(100dvh - 72px);
+}
+#calendar{
+  flex:1 1 auto;
+  grid-auto-rows:minmax(72px,1fr);
+}
+.day{
+  min-height:72px;
+}
+@media (max-width:520px){
+  .wrap{
+    padding:6px 5px max(8px, env(safe-area-inset-bottom)) !important;
+  }
+  h1{
+    font-size:24px;
+    margin:2px 0 1px;
+  }
+  .sub{
+    font-size:11px;
+    margin-bottom:6px;
+  }
+  .card{
+    min-height:calc(100dvh - 48px);
+    border-radius:16px;
+    padding:9px 6px !important;
+  }
+  .topbar{
+    grid-template-columns:44px 1fr 44px;
+    margin-bottom:5px;
+  }
+  .navbtn{height:40px}
+  .monthtitle{font-size:20px}
+  .weekdays div{font-size:11px;padding:3px 0}
+  .weekdays,.grid{gap:4px}
+  #calendar{
+    flex:1 1 auto;
+    grid-auto-rows:minmax(76px,1fr);
+  }
+  .day{
+    min-height:76px !important;
+    padding:5px 2px 4px;
+  }
+  .num{font-size:15px}
+  .shift{font-size:19px;margin-top:4px}
+  .shiftname{font-size:7.5px}
+  .legend{
+    margin-top:7px;
+    gap:4px;
+  }
+  .leg{
+    padding:5px 2px;
+    font-size:9px;
+  }
+  .leg b{font-size:14px;margin-bottom:1px}
+  .info{
+    margin-top:7px;
+    font-size:10.5px;
+    line-height:1.25;
+  }
+  .actions{
+    margin-top:7px;
+    gap:5px;
+  }
+  .action{
+    padding:9px 5px;
+    font-size:12px;
+  }
+}
+@media (max-width:380px){
+  #calendar{
+    grid-auto-rows:minmax(70px,1fr);
+  }
+  .day{
+    min-height:70px !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
-  <h1>📅 Turni ❤️</h1>
+  <h1>📅 Calendario Turni</h1>
   <div class="sub">Ciclo: 4 Mattine → 2 Notti → 2 Riposi → 4 Pomeriggi → 2 Notti → 2 Riposi</div>
 
   <div class="card">
